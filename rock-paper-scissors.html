@@ -5,9 +5,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200;400&display=swap" rel="stylesheet">
+    <script src="rock-paper-scissors.js" defer></script>
 </head>
 <body>
-    <script src="rock-paper-scissors.js"></script>
-    
+    <h1>Rock, Paper, Scissors!</h1>
+    <div class="container">
+        <div class="player">
+            <button id="rock" class="player-button icon rock">
+                <img src="./images/player-rock.png" alt="rock">
+            </button>
+            <button id="paper" class="player-button icon paper">
+                <img src="./images/player-paper.png">
+            </button>
+            <button id="scissors" class="player-button icon scissors">
+                <img src="./images/player-scissors.png">
+            </button>
+        </div>
+        <div class="scoreboard-container">
+            <h2>Score:</h2>
+            <div class="score-container">
+                <div class="player-score">
+                    <p>Player:</p>
+                    <p class="score"></p>
+                </div>
+                <div class="computer-score">
+                    <p>Computer:</p>
+                    <p class="score"></p>
+                </div>
+            </div>
+            <div class="tie-counter"></div>
+            <div class="play-again-container">
+                <button id="play-again-btn">Play Again!</button>
+            </div>
+        </div>
+        <div class="computer">
+            <div class="icon opponent-rock">
+                <img src="./images/opponent-rock.png">
+            </div>
+            <div class="icon opponent-paper">
+                <img src="./images/opponent-paper.png">
+            </div>
+            <div class="icon opponent-scissors">
+                <img src="./images/opponent-scissors.png">
+            </div>
+        </div>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="spacer"></span>
+            <div class="modal-text-container">
+                <p class="modal-text">Some text in the Modal..</p>
+            </div>
+            <span class="close">&times;</span>
+        </div>
+      </div>
 </body>
 </html>

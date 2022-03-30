@@ -15,51 +15,102 @@ function computerPlay() {
 
 }
 
-
-function playerPlay() {
-    let selection = prompt('Choice: ');
-    return selection;
+function removeHighlightsFromPrevious() {
+    document.querySelector(`.${lastRound.player}`).classList.remove('selected');
+    document.querySelector(`.opponent-${lastRound.computer}`).classList.remove('selected');
 }
 
+function highlightSelection(playerSelection, computerSelection) {
+    lastRound.player = playerSelection;
+    lastRound.computer = computerSelection;
+    playerSelection = document.querySelector(`.${playerSelection}`);
+    computerSelection = document.querySelector(`.opponent-${computerSelection}`);
+    
+    playerSelection.classList.add('selected');
+    computerSelection.classList.add('selected');
 
-function playRound(playerSelection, computerSelection) {
-    computerSelection = computerPlay();
-    playerSelection = playerPlay();
+}
 
-    playerSelection = playerSelection.toLowerCase();
-    if (playerSelection !== 'rock' && playerSelection !== 'paper' && playerSelection !== 'scissors') {
-        return 'invalid selection';
+let playerScore = 0;
+let computerScore = 0;
+let tieCount = 0;
+
+let lastRound = {
+    player: '',
+    computer: '',
+}
+
+function playRound(playerSelection) {
+    if (playerScore + computerScore === 5) {
+        resetGame();
+        return;
+    }
+
+    if (lastRound.player !== '') {
+        removeHighlightsFromPrevious(lastRound);
+    }
+    
+    playerSelection = playerSelection.target.closest('button').id;
+    let computerSelection = computerPlay();
+    
+    if (playerSelection === computerSelection) {
+        tieCount++;
+        tieCountDisplay.textContent = `Tied Rounds: ${tieCount}`;
+        
+    } else if ((playerSelection === 'rock' && computerSelection === 'paper') || (playerSelection === 'scissors' && computerSelection === ' rock') || (playerSelection === 'paper' && computerSelection === 'scissors')) {
+        computerScore++;
+        computerScoreDisplay.textContent = `${computerScore}`;
     } else {
-        if (playerSelection === computerSelection) {
-            return 'tie';
-        } else if ((playerSelection === 'rock' && computerSelection === 'paper') || (playerSelection === 'scissors' && computerSelection === ' rock') || (playerSelection === 'paper' && computerSelection === 'scissors')) {
-            return 'computer wins';
+        playerScore++;
+        playerScoreDisplay.textContent = `${playerScore}`;
+    }
+    
+    highlightSelection(playerSelection, computerSelection);
+    
+    if (playerScore + computerScore === 5) {
+        if (playerScore > computerScore) {
+            modalText.textContent = 'You win!';
+            modal.style.display = "flex";
         } else {
-            return 'player wins';
+            modalText.textContent = 'You lose.';
+            modal.style.display = "flex";
         }
     }
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    let counter = 5;
-    while (counter) {
-        console.log(`Rounds left: ${counter}`)
-        let result = playRound();
-        if (result === 'invalid selection') {
-            console.log('invalid selection');
-            continue;
-        } else if (result === 'player wins') {
-            playerScore++;
-            counter--;
-        } else if (result === 'computer wins') {
-            console.log(result);
-            computerScore++;
-            counter--;
-        }
+function resetGame() {
+    removeHighlightsFromPrevious(lastRound);
+    playerScore = 0;
+    playerScoreDisplay.textContent = 0;
+    computerScore = 0;
+    computerScoreDisplay.textContent = 0;
+    tieCount = 0;
+    tieCountDisplay.textContent = 0;
+
+    for (prop in lastRound) {
+        prop.value = '';
     }
-    return console.log(`Game over. Player score: ${playerScore} Computer score: ${computerScore}`);
 }
 
-game();
+window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+}
+
+let choice = document.querySelectorAll('.player-button');
+let playerScoreDisplay = document.querySelector('.player-score').lastElementChild;
+let computerScoreDisplay = document.querySelector('.computer-score').lastElementChild;
+let tieCountDisplay = document.querySelector('.tie-counter');
+let playAgainButton = document.querySelector('#play-again-btn');
+let closeButton = document.querySelector('.close');
+let modal = document.getElementById("myModal"); 
+let modalText = document.querySelector('.modal-text');
+
+playerScoreDisplay.textContent = `${playerScore}`;
+computerScoreDisplay.textContent = `${computerScore}`;
+tieCountDisplay.textContent = `Tied Rounds: ${tieCount}`;
+
+choice.forEach(element => element.addEventListener('click', playRound));
+playAgainButton.addEventListener('click', resetGame);
+closeButton.addEventListener('click', () => modal.style.display = 'none');
